@@ -1,12 +1,14 @@
 import datetime
 
-from sqlalchemy import Column, Float, ForeignKey, Integer, String, Time, CheckConstraint
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
-from app.transactions.domain.transaction_type import TransactionType
-
 # Base = declarative_base()
 from app.extensions import db
+from app.transactions.domain.transaction_type import TransactionType
+from sqlalchemy import CheckConstraint, Column, Float, ForeignKey, Integer, String, Time
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
+from app.account.repository.account import Account
+from app.user.repository.user import User
+
 
 class Transaction(db.Model):
     __tablename__ = "transaction"
@@ -20,8 +22,8 @@ class Transaction(db.Model):
     )
     amount = Column(Float(), nullable=False)
     note = Column(String(255), nullable=False)
-    account = Column(Integer(), ForeignKey("account.id"))
-    performed_by = Column(Integer(), ForeignKey("user.id"))
+    account_id = Column(Integer(), ForeignKey("account.id"), nullable=False)
+    performed_by = Column(Integer(), ForeignKey("user.id"), nullable=False)
     occurred_at = Column(Time(timezone=True), default=datetime.datetime.utcnow)
     period = Column(String(6))
 

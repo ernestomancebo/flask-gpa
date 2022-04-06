@@ -3,8 +3,9 @@
 from apispec import APISpec
 from apispec.ext.marshmallow import MarshmallowPlugin
 from apispec_webframeworks.flask import FlaskPlugin
-from app.transactions.serializer.transaction import TransactionSchema
-from app.user.serializer.user import UserSchema
+from app.account.domain.account import Account
+from app.transactions.domain.transaction import Transaction
+from app.user.domain.user import User
 
 spec = APISpec(
     title="GPA API",
@@ -24,8 +25,9 @@ jwt_scheme = {
 spec.components.security_scheme("jwt", jwt_scheme)
 
 # Schemas
-spec.components.schema("User", schema=UserSchema)
-spec.components.schema("Transaction", schema=TransactionSchema)
+spec.components.schema("User", schema=User)
+spec.components.schema("Transaction", schema=Transaction)
+spec.components.schema("Account", schema=Account)
 
 
 # Tags for Enpoint annotations

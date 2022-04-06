@@ -1,7 +1,14 @@
-from datetime import datetime
+# from app.extensions import ma
+from app.transactions.domain.transaction_type import TransactionType
+from marshmallow import fields, Schema
+from marshmallow.decorators import post_load
+from marshmallow.validate import ContainsOnly, Length, Range, Regexp
+
+TRANSACTION_PERIOD_PATTERN = r"^\d{4}$"
+"""The transaction period must be a four digits string, i.e. 202101 for 2021 January"""
 
 
-class Transaction:
+class Transaction(Schema):
     """
     Represents a transaction. Its fields are the following:
 
@@ -16,11 +23,18 @@ class Transaction:
     - period: The statement period; i.e., 202101 (Janary 2021).
     """
 
-    id: int
-    transaction_type: str
-    amount: float
-    note: str
-    account: int
-    performed_by: int
-    occurred_at: datetime
-    period: str
+    id = fields.Integer(required=False, dump_default=0)
+    transaction_type: fields.String(
+        required=True,
+        validate=ContainsOnly(TransactionType.CREDIT, TransactionType.DEBIT),
+    )
+    amount = fields.Float(required=True, validate=Range(min=0.01))
+    note = fields.String(required=False, validate=Length(max=255))
+    account = fields.String(required=True, validate=Length(min=17, max=30))
+    performed_by = fields.Integer(required=True)
+    occurred_at = fields.DateTime(required=True)
+    period = fields.String(required=False, validate=Regexp(TRANSACTION_PERIOD_PATTERN))
+
+    @post_load
+    def create_transaction(self, data, **kwargs):
+        return Transaction(**data)

@@ -1,8 +1,9 @@
 from datetime import datetime, timedelta
 
 import jwt
-from app.extensions import pwd_context
+from app.extensions import db, pwd_context
 from app.user.domain.user import User
+from app.user.repository.repository import UserRepository
 from flask import current_app, request
 from flask.helpers import make_response
 from flask_restful import Resource
@@ -12,7 +13,8 @@ class AuthenticateResource(Resource):
     """Authentication related Operations"""
 
     def __init__(self):
-        user_service = None
+        self.user_repo = UserRepository(db)
+        self.user_schema = User()
 
     def post(self):
         """
@@ -35,11 +37,12 @@ class AuthenticateResource(Resource):
                 {"WWW.Authentication": 'Basic realm: "login required"'},
             )
 
-        user: User = self.user_service.get_by_username(auth.username)
+        user: User = self.user_repo.get_by_username(auth.username)
         if pwd_context.verify(auth.password, user.password):
             token = jwt.encode(
                 {
                     "public_id": user.id,
+                    # TODO: put time delta in configuration
                     "exp": datetime.utcnow() + timedelta(minutes=30),
                 },
                 current_app.config["SECRET_KEY"],

@@ -1,5 +1,6 @@
 from os import environ
 
+import click
 from flask import Flask, jsonify
 
 from app.app import create_app
@@ -29,6 +30,48 @@ config_mode = environ.get("ENV", "Development").capitalize()
 DEBUG = config_mode == "Development"
 
 flask_app = create_app()
+
+"""
+CLI commmands region.
+May be a better place to put this.
+"""
+
+
+@flask_app.cli.command("create-users")
+def create_users():
+    """Create users"""
+    from app.extensions import db
+    from app.user.domain.user_roles import UserRoles
+    from app.user.repository.user import User
+
+    users = [
+        User(
+            id=None,
+            name="Admin",
+            username="admin",
+            email="admin@mail.com",
+            password="admin",
+            role=UserRoles.ADMIN,
+        ),
+        User(
+            id=None,
+            name="John Doe",
+            username="johndoe",
+            email="johndoe@mail.com",
+            password="john",
+            role=UserRoles.USER,
+        ),
+    ]
+
+    for u in users:
+        existing_user = User.query.filter(User.username == u.username).first()
+        if not existing_user:
+            click.echo(f"Creating user '{u.username}'")
+            db.session.add(u)
+
+    db.session.commit()
+    click.echo(f"Created user")
+
 
 # Put in here due to circular dependency if done at factory
 init_documentation_spec(flask_app)

@@ -1,1 +1,1 @@
-
+"""Transaction domain module"""

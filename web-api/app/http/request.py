@@ -1,4 +1,8 @@
 from collections.abc import Mapping
+from functools import wraps
+
+from app.http.response import ResponseFailure, ResponseTypes
+from flask import request, jsonify
 
 
 class invalidRequest:
@@ -40,3 +44,20 @@ def build_list_request(filters=None):
             return invalid_req
 
     return validRequest(filters=filters)
+
+
+def json_body_required(f):
+    """JSON body required"""
+
+    @wraps(f)
+    def decorator(*args, **kwargs):
+        # Halts the request if the JSON object is empty
+        if not len(request.json):
+            response = ResponseFailure(
+                ResponseTypes.PARAMETERS_ERROR, "JSON body is empty"
+            )
+            return response.value, 403
+
+        return f(*args, **kwargs)
+
+    return decorator

@@ -1,5 +1,6 @@
 import datetime
 
+from app.extensions import db
 from sqlalchemy import (
     Column,
     Float,
@@ -9,11 +10,7 @@ from sqlalchemy import (
     Time,
     UniqueConstraint,
 )
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-from app.extensions import db
-
-# Base = declarative_base()
 
 
 class Account(db.Model):

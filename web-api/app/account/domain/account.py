@@ -1,11 +1,11 @@
-import dataclasses
-from datetime import datetime
+# from app.extensions import ma
+from marshmallow import fields, Schema
+from marshmallow.validate import Length, Range
 
 
-@dataclasses.dataclass
-class Account:
+class Account(Schema):
     """
-    Domain representation of a banking account.
+    Domain representation of an account.
 
     The properties of this entity are:
     - id: a database identificator.
@@ -14,17 +14,11 @@ class Account:
     - owner: The customer id who owns this account.
     - description: An user arbitrary description (i.e. Vacation Savings).
     - amount: The current amount.
-
-    The number of the account. For US accounts, it can be up to 17 digits,
-     for europeans accounts can be up to 30.
-    More details can be seen here:
-    https://www.sapling.com/8038665/bank-account-number-standards
-    For the sake of the example we're keeping this as simple as only digits of 17.
     """
 
-    id: int
-    account_number: str
-    owner: int
-    description: str
-    balance: float
-    creation_date: datetime
+    id = fields.Integer(required=False, dump_default=0)
+    account_number = fields.String(required=True, validate=Range(min=4, max=6))
+    owner = fields.Integer(require=True)
+    description = fields.String(required=False, validate=Length(max=100))
+    balance = fields.Float(required=True)
+    creation_date = fields.DateTime(required=False)
