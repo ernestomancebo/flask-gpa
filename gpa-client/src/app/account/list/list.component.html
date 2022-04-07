@@ -1,0 +1,45 @@
+<article>
+  <div class="flex w-90-ns center">
+    <div class="w-80">
+      <h2 class="f3 fw4 pa3 mv0">Accounts</h2>
+    </div>
+    <div class="w-20 pa3 mr2">
+      <a class="f6 link dim br2 ph3 pv2 mb2 dib white bg-mid-gray" [routerLink]="[ 'add']">
+        Add Account
+      </a>
+    </div>
+  </div>
+  <!-- Accounts container -->
+  <div class="cf pa2 w-90-ns center">
+    <div class=" mv4 mw8 fl w-50 w-25-m w-20-l pa2" *ngFor="let account of accounts">
+      <div class="ba b--solid b--black-10 br2 pa2">
+        <!-- Link to transactions -->
+
+        <div name="account-number-container">
+          <div class="w-100 black-60">
+            <span class="f4">Account Number</span>
+          </div>
+          <div class="w-100 black-90 pt2">
+            <span class="f3">{{ account.account_number }}</span>
+          </div>
+        </div>
+        <div name="description-container" class="pt3">
+          <span class="f5 black-40 dib two-lines-height">{{ account.description }}</span>
+        </div>
+        <div name="current-balance-container" class="pt3 flex">
+          <div class="fl tl w-50">
+            <span class="f4 black-50">Current Balance</span>
+          </div>
+          <div class="fl tr w-50">
+            <span class="f3 black-90">{{ account.balance | currency:'USD'}}</span>
+          </div>
+        </div>
+        <div name="view-transactions-container">
+          <div class="tr w-100 pt3">
+            <a [routerLink]="['transactions', account.account_number ]" class="link dim">View Transactions</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</article>

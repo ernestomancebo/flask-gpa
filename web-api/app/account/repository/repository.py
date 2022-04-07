@@ -12,9 +12,8 @@ class AccountRepository:
     def __init__(self, db: SQLAlchemy):
         self.db = db
 
-    def create_account(self, account: Account, user: User):
+    def create_account(self, account: Account):
         """Creates a new account"""
-        account.owner = user.id
         new_account = self.db.session.add(account)
         self.db.session.commit()
 
@@ -32,9 +31,8 @@ class AccountRepository:
         """Retrieves the given account by the given account number"""
         user_account = (
             self.db.session.query(Account)
-            .filter(
-                Account.account_number == account_number and Account.owner == user.id
-            )
+            .filter(Account.account_number == account_number)
+            .filter(Account.owner == user.id)
             .first()
         )
 
@@ -49,14 +47,13 @@ class AccountRepository:
         """Updates the account account balance given the transaction"""
         # Debit goes as posivite, Credit as negative
         transaction_amount = abs(transaction.amount)
-        if transaction.transaction_type == TransactionType.CREDIT:
+        if transaction.transaction_type == TransactionType.DEBIT:
             transaction_amount = -1 * transaction_amount
 
         # Update the corresponding account
-        self.db.session.query(account).filter(
+        self.db.session.query(Account).filter(
             Account.account_number == account.account_number
-            and Account.owner == user.id
-        ).update(
+        ).filter(Account.owner == user.id).update(
             {Account.balance: Account.balance + transaction_amount},
             synchronize_session=False,
         )

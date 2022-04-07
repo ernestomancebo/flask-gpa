@@ -7,7 +7,7 @@ from sqlalchemy import (
     ForeignKey,
     Integer,
     String,
-    Time,
+    DateTime,
     UniqueConstraint,
 )
 from sqlalchemy.orm import relationship
@@ -21,12 +21,20 @@ class Account(db.Model):
         UniqueConstraint("account_number", "owner", name="unique_account_number_owner"),
     )
 
+    def __init__(self, id, account_number, owner, description, balance, creation_date):
+        self.id = id
+        self.account_number = account_number
+        self.owner = owner
+        self.description = description
+        self.balance = balance
+        self.creation_date = creation_date
+
     id = Column(Integer(), primary_key=True)
-    account_number = Column(Integer(), nullable=False)
+    account_number = Column(String(), nullable=False)
     owner = Column(Integer(), ForeignKey("user.id"), nullable=False)
     description = Column(String(100), nullable=False)
     balance = Column(Float(), nullable=False)
-    creation_date = Column(Time(timezone=True), default=datetime.datetime.utcnow)
+    creation_date = Column(DateTime(), default=datetime.datetime.now())
 
     # Relationships
     user = relationship("User")

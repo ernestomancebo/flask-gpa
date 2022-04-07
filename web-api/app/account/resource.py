@@ -1,8 +1,8 @@
 from app.account.repository.repository import AccountRepository
 from app.account.domain.account import Account
+from app.account.repository.account import Account as ModelAccount
 from app.auth.token_required import token_required
 from app.extensions import db
-from app.http.request import json_body_required
 from app.http.response import ResponseFailure, ResponseSuccess, ResponseTypes
 from app.user.repository.user import User
 from flask import abort, make_response
@@ -14,9 +14,9 @@ class AccountResource(Resource):
 
     def __init__(self):
         self.account_schema = Account()
+        self.accounts_schema = Account(many=True)
         self.accounts_repo = AccountRepository(db)
 
-    # @json_body_required
     @token_required
     def post(self, current_user: User):
         """
@@ -43,6 +43,10 @@ class AccountResource(Resource):
         """
         j = request.json
 
+        # Default initial values
+        j["owner"] = current_user.id
+        j["balance"] = 0
+
         # This field is expected by the schema.
         # As we're creating, default this to zero
         errors = self.account_schema.validate(j)
@@ -50,13 +54,12 @@ class AccountResource(Resource):
         if errors:
             response = ResponseFailure(ResponseTypes.PARAMETERS_ERROR, str(errors))
             return response.value, 401
-            # abort(401, str(errors))
 
-        account: Account = self.account_schema.load(j)
-        self.accounts_repo.create_account(account, current_user)
+        account: ModelAccount = self.account_schema.load(j)
+        account.id = None
+        self.accounts_repo.create_account(account)
 
-        response = ResponseSuccess("Transaction registered succesfully")
-        return response, 201
+        return make_response("Account created", 201)
 
     @token_required
     def get(self, current_user: User):
@@ -83,4 +86,4 @@ class AccountResource(Resource):
             - Account Functions
         """
         accounts = self.accounts_repo.get_user_accounts(current_user)
-        return accounts, 200
+        return self.accounts_schema.dump(accounts), 200

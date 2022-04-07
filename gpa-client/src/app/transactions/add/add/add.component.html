@@ -1,0 +1,45 @@
+<div class="w-90 w-ns-75 w-m-40 center">
+  <article class="mw5 mw6-ns center center pa4 black-80 ba b--black-30">
+    <div class="flex">
+      <div class="w-80">
+        <h2 class="f3 fw4 pa3 mv0">Add Transaction</h2>
+      </div>
+    </div>
+    <form name="form" role="form" accept-charset="utf-8" (ngSubmit)="addTransaction()" [formGroup]="transactionForm">
+      <fieldset id="sign_up" class="ba b--transparent ph0 mh0">
+        <legend class="ph0 mh0 fw6 clip">Account Number</legend>
+        <div class="mt3">
+          <label class="db fw4 lh-copy f6" for="account">Account Number</label>
+          <select class="pa2 input-reset ba bg-transparent w-90 w-50-m measure" name="account" formControlName="account"
+            id="account">
+            <option *ngFor="let account of userAccounts" [value]="account.account_number">{{account.account_number}}
+            </option>
+          </select>
+        </div>
+        <div class="mt3">
+          <label class="db fw4 lh-copy f6" for="amount">Amount</label>
+          <input class="pa2 input-reset ba bg-transparent w-90 w-50-m measure" type="number" name="amount"
+            formControlName="amount" id="amount">
+        </div>
+        <div class="mt3">
+          <label class="db fw4 lh-copy f6" for="note">Note</label>
+          <input class="pa2 input-reset ba bg-transparent w-90 w-50-m measure" type="text" name="note" maxlength="100"
+            formControlName="note" id="note">
+        </div>
+        <div class="mt3">
+          <label class="db fw4 lh-copy f6" for="type">Type</label>
+          <select class="pa2 input-reset ba bg-transparent w-90 w-50-m measure" formControlName="type" id="type"
+            name="type">
+            <option *ngFor="let type of transactionTypes" [value]="type">{{type}}</option>
+          </select>
+        </div>
+      </fieldset>
+      <div class="mt3">
+        <button type="submit" [disabled]="transactionForm.invalid"
+          class="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6">
+          Add Account
+        </button>
+      </div>
+    </form>
+  </article>
+</div>

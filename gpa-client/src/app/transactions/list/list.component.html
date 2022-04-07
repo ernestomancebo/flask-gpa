@@ -1,0 +1,42 @@
+<div class="flex pa4 w-90-ns center">
+  <div class="w-80">
+    <h2 class="f3 fw4 pa3 mv0">Transactions</h2>
+  </div>
+  <div class="w-20 pa3 mr2">
+    <a class="f6 link dim br2 ph3 pv2 mb2 dib white bg-mid-gray" [routerLink]="[ 'add']">
+      Add Transaction
+    </a>
+  </div>
+</div>
+<!--
+  Account transactions table
+ -->
+<div name="transactions-container">
+  <div class="pa4">
+    <div class="overflow-auto">
+      <table class="f6 w-100 mw8 center" cellspacing="0">
+        <thead>
+          <tr class="stripe-dark">
+            <th class="fw6 tl pa3 bg-white">Transaction ID</th>
+            <th class="fw6 tl pa3 bg-white">Date</th>
+            <th class="fw6 tl pa3 bg-white">Transaction Type</th>
+            <th class="fw6 tl pa3 bg-white">Account Number</th>
+            <th class="fw6 tl pa3 bg-white">Note</th>
+            <th class="fw6 tl pa3 bg-white">Amount</th>
+          </tr>
+        </thead>
+        <tbody class="lh-copy">
+          <tr class="stripe-dark" *ngFor="let transaction of transactions">
+            <td class="pa3">{{ transaction.id }}</td>
+            <td class="pa3">{{ transaction.occurred_at | date:'mediumDate'}}</td>
+            <td class="pa3">{{ transaction.transaction_type }}</td>
+            <td class="pa3">{{ transaction.account_id }}</td>
+            <td class="pa3">{{ transaction.note }}</td>
+            <td class="pa3">{{(transaction.transaction_type === debit ? "-": "+" ) }}{{ transaction.amount |
+              number:'1.2-2' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

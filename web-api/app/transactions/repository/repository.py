@@ -10,7 +10,7 @@ class TransactionRepository:
 
     def add_transaction(self, transaction: Transaction):
         self.db.session.add(transaction)
-        self.db.commit()
+        self.db.session.commit()
 
     def get_transactions_by(self, account_id: int, period: str = None):
         query = self.db.session.query(Transaction).filer(

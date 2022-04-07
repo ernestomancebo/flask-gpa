@@ -1,13 +1,16 @@
+from datetime import datetime
+from distutils.log import error
 import json
+
+from black import err
 
 from app.account.repository.repository import AccountRepository
 from app.auth.token_required import token_required
 from app.extensions import db
-from app.http.request import json_body_required
 from app.http.response import ResponseFailure, ResponseSuccess, ResponseTypes
 from app.transactions.domain.transaction import TRANSACTION_PERIOD_PATTERN, Transaction
 from app.transactions.repository.repository import TransactionRepository
-from app.transactions.repository.transaction import Transaction
+from app.transactions.repository.transaction import Transaction as TransactionModel
 from app.user.repository.user import User
 from flask import abort, make_response
 from flask_restful import Resource, request
@@ -18,10 +21,10 @@ class TransactionResource(Resource):
 
     def __init__(self):
         self.transaction_schema = Transaction()
+        self.transaction_list_schema = Transaction(many=True)
         self.transaction_repo = TransactionRepository(db)
         self.accounts_repo = AccountRepository(db)
 
-    # @json_body_required
     @token_required
     def post(self, current_user: User):
         """
@@ -46,34 +49,33 @@ class TransactionResource(Resource):
         tags:
             - Transaction Functions
         """
-        j = json.loads(bytes.decode(request.data))
-        # This field is expected by the schema.
-        # As we're creating, default this to zero
-        # TODO: check if needed
-        # j["id"] = 0
+        j = request.json
+        j["performed_by"] = current_user.id
+        # 202201 for 2022 January
+        j["period"] = datetime.now().strftime("%Y%m")
+
         errors = self.transaction_schema.validate(j)
 
         if errors:
-            response = ResponseFailure(ResponseTypes.PARAMETERS_ERROR, errors)
-            return response.value, 401
+            return make_response({"errors": errors}, 401)
 
         transaction: Transaction = self.transaction_schema.load(j)
         subject_account = self.accounts_repo.get_account_by_number(
-            transaction.account, current_user
+            transaction.account_id, current_user
         )
         # Validate that the account exists
         if not subject_account:
-            return make_response("Account not found", 401)
+            return make_response(f"Account {transaction.account_id} not found", 401)
 
-        # transaction.account = subject_account.id
-        transaction.user = current_user.id
-
+        transaction.id = None
+        transaction.account_id = subject_account.id
         # Append the transaction and update the account balance
         self.transaction_repo.add_transaction(transaction)
-        self.accounts_repo.update_account_balance(transaction)
+        self.accounts_repo.update_account_balance(
+            subject_account, transaction, current_user
+        )
 
-        response = ResponseSuccess("Transaction registered succesfully")
-        return response, 201
+        return make_response("Transaction registered succesfully"), 201
 
     @token_required
     def get(self, current_user: User):

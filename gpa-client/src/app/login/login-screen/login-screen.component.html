@@ -1,0 +1,30 @@
+<div class="w-90 w-ns-75 w-m-40 center">
+  <article class="mw5 mw6-ns center center pa4 black-80 ba b--black-30">
+    <div class="flex">
+      <div class="w-80">
+        <h2 class="f3 fw4 pa3 mv0">Welcome to GPA</h2>
+      </div>
+    </div>
+    <form name="form" role="form" accept-charset="utf-8" (ngSubmit)="singIn()" [formGroup]="loginForm">
+      <fieldset id="sign_up" class="ba b--transparent ph0 mh0">
+        <legend class="ph0 mh0 fw6 clip">Sign In</legend>
+        <div class="mt3">
+          <label class="db fw4 lh-copy f6" for="username">username</label>
+          <input class="pa2 input-reset ba bg-transparent w-90 w-50-m measure" type="text" name="username"
+            formControlName="username" id="username">
+        </div>
+        <div class="mt3">
+          <label class="db fw4 lh-copy f6" for="password">Password</label>
+          <input class="b pa2 input-reset ba bg-transparent w-90 w-50-m measure" type="password" name="password"
+            formControlName="password" id="password">
+        </div>
+      </fieldset>
+      <div class="mt3">
+        <button type="submit" [disabled]="loginForm.invalid"
+          class="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6">
+          Sign In
+        </button>
+      </div>
+    </form>
+  </article>
+</div>

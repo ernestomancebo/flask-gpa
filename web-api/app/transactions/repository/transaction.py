@@ -1,17 +1,41 @@
 import datetime
 
-# Base = declarative_base()
 from app.extensions import db
 from app.transactions.domain.transaction_type import TransactionType
-from sqlalchemy import CheckConstraint, Column, Float, ForeignKey, Integer, String, Time
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import (
+    CheckConstraint,
+    Column,
+    DateTime,
+    Float,
+    ForeignKey,
+    Integer,
+    String,
+)
 from sqlalchemy.orm import relationship
-from app.account.repository.account import Account
-from app.user.repository.user import User
 
 
 class Transaction(db.Model):
     __tablename__ = "transaction"
+
+    def __init__(
+        self,
+        id,
+        transaction_type,
+        amount,
+        note,
+        account_id,
+        performed_by,
+        occurred_at,
+        period,
+    ):
+        self.id = id
+        self.transaction_type = transaction_type
+        self.amount = amount
+        self.note = note
+        self.account_id = account_id
+        self.performed_by = performed_by
+        self.occurred_at = occurred_at
+        self.period = period
 
     id = Column(Integer(), primary_key=True)
     transaction_type = Column(
@@ -24,8 +48,8 @@ class Transaction(db.Model):
     note = Column(String(255), nullable=False)
     account_id = Column(Integer(), ForeignKey("account.id"), nullable=False)
     performed_by = Column(Integer(), ForeignKey("user.id"), nullable=False)
-    occurred_at = Column(Time(timezone=True), default=datetime.datetime.utcnow)
-    period = Column(String(6))
+    occurred_at = Column(DateTime(), default=datetime.datetime.now())
+    period = Column(String(6), nullable=False)
 
     # Relationships
     user = relationship("User")

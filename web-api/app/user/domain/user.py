@@ -14,7 +14,8 @@ class User(Schema):
     name = fields.String(validate=Length(max=80), required=True)
     username = fields.String(validate=Length(max=80), required=True)
     email = fields.String(validate=Email, required=True)
-    password = fields.String(validate=Length(max=255), required=True)
+    # Password can't see the light of the outter world
+    password = fields.String(validate=Length(max=255), required=True, load_only=True)
     active = fields.Boolean(required=False, dump_default=True)
     # Roles can be only the defined at UserRoles class.
     role = fields.String(
