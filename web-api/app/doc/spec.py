@@ -27,7 +27,6 @@ spec.components.security_scheme("jwt", jwt_scheme)
 # Schemas
 spec.components.schema("User", schema=User)
 spec.components.schema("Transaction", schema=Transaction)
-spec.components.schema("Account", schema=Account)
 
 
 # Tags for Enpoint annotations

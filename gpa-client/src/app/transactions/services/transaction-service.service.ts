@@ -12,11 +12,15 @@ export class TransactionsService {
     return this.http.post<Transaction>('/api/v1/transaction', transaction);
   }
 
-  public getTransactionByPeriod(account_number: number, period: string) {
-    let params = new HttpParams()
-      .append('account_number', account_number)
-      .append('period', period);
+  public getTransactionByPeriod(filterObj: any) {
+    let params = new HttpParams();
 
-    return this.http.get<Transaction>('/api/v1/transaction', { params });
+    for (let filter of ['account_number', 'date_start', 'date_end']) {
+      if (!!filterObj[filter]) {
+        params = params.append(filter, filterObj[filter]);
+      }
+    }
+
+    return this.http.get<Transaction[]>('/api/v1/transaction', { params });
   }
 }

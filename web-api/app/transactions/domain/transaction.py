@@ -1,8 +1,9 @@
+from app.account.domain.account import Account as AccountSchema
 from app.transactions.domain.transaction_type import TransactionType
 from app.transactions.repository.transaction import Transaction as TransactionModel
 from marshmallow import Schema, fields
 from marshmallow.decorators import post_load
-from marshmallow.validate import ContainsOnly, Length, Range, Regexp
+from marshmallow.validate import Length, OneOf, Range, Regexp
 
 TRANSACTION_PERIOD_PATTERN = r"^\d{6}$"
 """The transaction period must be a four digits string, i.e. 202101 for 2021 January"""
@@ -26,7 +27,7 @@ class Transaction(Schema):
     id = fields.Integer(required=False, dump_default=0, missing=0)
     transaction_type = fields.String(
         required=True,
-        validate=ContainsOnly(TransactionType.CREDIT, TransactionType.DEBIT),
+        validate=OneOf([TransactionType.CREDIT, TransactionType.DEBIT]),
     )
     amount = fields.Float(required=True, validate=Range(min=0.01))
     note = fields.String(required=False, validate=Length(max=255), missing=None)
@@ -34,6 +35,8 @@ class Transaction(Schema):
     performed_by = fields.Integer(required=True)
     occurred_at = fields.DateTime(required=False, missing=None)
     period = fields.String(required=False, validate=Regexp(TRANSACTION_PERIOD_PATTERN))
+
+    account = fields.Nested(AccountSchema(only=("account_number",)))
 
     @post_load
     def create_transaction(self, data, **kwargs):

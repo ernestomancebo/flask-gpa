@@ -1,8 +1,8 @@
-<nav class="pa3 pa4-ns">
+<nav *ngIf="documentObj.location.pathname != '/login' " class="pa3 pa4-ns">
   <a class="link dim gray f6 f5-ns dib mr3" routerLink="accounts" [routerLinkActive]="['black', 'b']"
-    [routerLinkActiveOptions]="{ exact: true }" title="Accounts">Accounts</a>
+     [routerLinkActiveOptions]="{ exact: true }" title="Accounts">Accounts</a>
   <a class="link dim gray f6 f5-ns dib mr3" routerLink="transactions" [routerLinkActive]="['black', 'b']"
-    [routerLinkActiveOptions]="{ exact: true }" title="transactions">Transactions</a>
+     [routerLinkActiveOptions]="{ exact: true }" title="transactions">Transactions</a>
 </nav>
 
 <router-outlet></router-outlet>

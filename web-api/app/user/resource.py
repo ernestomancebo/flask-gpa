@@ -6,7 +6,6 @@ from app.http.response import ResponseFailure, ResponseSuccess, ResponseTypes
 from app.user.domain.user import User
 from app.user.domain.user_roles import UserRoles
 from app.user.repository.repository import UserRepository
-from flask import abort
 from flask_restful import Resource, request
 
 
@@ -64,5 +63,4 @@ class UserResource(Resource):
         user = User(**j)
         self.user_repo.add_user(user)
 
-        response = ResponseSuccess("Registered successfully")
-        return response, 201
+        return {"status": "success", "message": "User registered successfully"}, 201

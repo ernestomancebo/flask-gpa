@@ -22,6 +22,7 @@ export class LoginScreenComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.userAccountService.isLoggedIn()) {
+      this.router.navigate(['accounts']);
     }
   }
 

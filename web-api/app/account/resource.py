@@ -1,11 +1,11 @@
-from app.account.repository.repository import AccountRepository
 from app.account.domain.account import Account
 from app.account.repository.account import Account as ModelAccount
+from app.account.repository.repository import AccountRepository
 from app.auth.token_required import token_required
 from app.extensions import db
-from app.http.response import ResponseFailure, ResponseSuccess, ResponseTypes
+
+# from app.http.response import ResponseFailure, ResponseSuccess, ResponseTypes
 from app.user.repository.user import User
-from flask import abort, make_response
 from flask_restful import Resource, request
 
 
@@ -52,14 +52,13 @@ class AccountResource(Resource):
         errors = self.account_schema.validate(j)
 
         if errors:
-            response = ResponseFailure(ResponseTypes.PARAMETERS_ERROR, str(errors))
-            return response.value, 401
+            return {"status": "error", "message": str(errors)}, 400
 
         account: ModelAccount = self.account_schema.load(j)
         account.id = None
         self.accounts_repo.create_account(account)
 
-        return make_response("Account created", 201)
+        return {"status": "success", "message": "Account registered successfully"}, 201
 
     @token_required
     def get(self, current_user: User):

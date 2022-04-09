@@ -12,12 +12,18 @@ class TransactionRepository:
         self.db.session.add(transaction)
         self.db.session.commit()
 
-    def get_transactions_by(self, account_id: int, period: str = None):
-        query = self.db.session.query(Transaction).filer(
-            Transaction.account == account_id
+    def get_transactions_by(
+        self, current_user: User, account: Account, date_start, date_end
+    ):
+        query = self.db.session.query(Transaction).filter(
+            Transaction.performed_by == current_user.id
         )
+        query = query.filter(Transaction.occurred_at >= date_start)
+        query = query.filter(Transaction.occurred_at <= date_end)
 
-        if period:
-            query = query.filer(Transaction.period == period)
+        if account:
+            query = query.filter(Transaction.account_id == account.id)
 
+        # Load the account, so we can get the number in the frontend
+        query = query.join(Account)
         return query.all()

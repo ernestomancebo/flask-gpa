@@ -1,4 +1,4 @@
-<div class="flex pa4 w-90-ns center">
+<div class="flex w-90-ns center">
   <div class="w-80">
     <h2 class="f3 fw4 pa3 mv0">Transactions</h2>
   </div>
@@ -6,6 +6,36 @@
     <a class="f6 link dim br2 ph3 pv2 mb2 dib white bg-mid-gray" [routerLink]="[ 'add']">
       Add Transaction
     </a>
+  </div>
+</div>
+<div class="w-70-ns w-90 center">
+  <div class="flex">
+    <legend class="ph0 mh0 fw6 clip">Account Number</legend>
+    <div class="mt3">
+      <label class="db fw4 lh-copy f6" for="account">Account Number</label>
+      <select class="pa2 input-reset ba bg-transparent w-90 w-50-m measure" name="account" id="account"
+              (change)="onAccountNumberChange($event)">
+        <option value="">All Accounts</option>
+        <option *ngFor="let account of userAccounts" value="{{account.account_number}}">{{account.account_number}}
+        </option>
+      </select>
+    </div>
+    <div class="w-25 pa3 mr">
+      <div class="relative">
+        <label class="fw4 lh-copy f6" for="mydate">Transaction Date</label>
+        <input class="input-box pa2 input-reset  bg-transparent w-90 w-50-m measure"
+               placeholder="Click to select a date" angular-mydatepicker name="mydate" (click)="dp.toggleCalendar()"
+               [(ngModel)]="dateModel" [options]="myDpOptions" #dp="angular-mydatepicker"
+               (dateChanged)="onDateChanged($event)" />
+      </div>
+    </div>
+    <div class="tr">
+      <div class="w-20 pa3 mr2">
+        <a class="f6 link dim br2 ph3 pv2 mb2 dib white bg-mid-gray" (click)="loadTransactions()">
+          Apply Filters
+        </a>
+      </div>
+    </div>
   </div>
 </div>
 <!--
@@ -30,7 +60,7 @@
             <td class="pa3">{{ transaction.id }}</td>
             <td class="pa3">{{ transaction.occurred_at | date:'mediumDate'}}</td>
             <td class="pa3">{{ transaction.transaction_type }}</td>
-            <td class="pa3">{{ transaction.account_id }}</td>
+            <td class="pa3">{{ transaction.account?.account_number }}</td>
             <td class="pa3">{{ transaction.note }}</td>
             <td class="pa3">{{(transaction.transaction_type === debit ? "-": "+" ) }}{{ transaction.amount |
               number:'1.2-2' }}</td>

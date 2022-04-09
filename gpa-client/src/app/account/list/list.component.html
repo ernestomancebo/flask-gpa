@@ -36,7 +36,9 @@
         </div>
         <div name="view-transactions-container">
           <div class="tr w-100 pt3">
-            <a [routerLink]="['transactions', account.account_number ]" class="link dim">View Transactions</a>
+            <a [routerLink]="['', 'transactions']" [queryParams]="{account_number: account.account_number}"
+               class="link dim">View
+              Transactions</a>
           </div>
         </div>
       </div>

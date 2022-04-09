@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { UserAccountService } from './user/services/user-account.service';
 
 @Component({
   selector: 'app-root',
@@ -8,8 +7,9 @@ import { UserAccountService } from './user/services/user-account.service';
 })
 export class AppComponent implements OnInit {
   title = 'gpa-client';
+  documentObj = document;
 
-  constructor(private userService: UserAccountService) {}
+  constructor() {}
 
   ngOnInit(): void {}
 }

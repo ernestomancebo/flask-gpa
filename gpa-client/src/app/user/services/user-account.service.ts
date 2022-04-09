@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { shareReplay, tap } from 'rxjs';
 import { User } from '../user.model';
@@ -21,7 +22,7 @@ export class UserAccountService {
     return this._currentUser;
   }
 
-  constructor(protected http: HttpClient) {}
+  constructor(protected http: HttpClient, protected router: Router) {}
 
   getAccounts() {
     // TODO: retrieve all the accounts
@@ -70,7 +71,14 @@ export class UserAccountService {
   }
 
   isLoggedIn() {
-    return !!this.currentUser && moment().isBefore(this.getExpiration());
+    const answer =
+      !!this.currentUser && moment().isBefore(this.getExpiration());
+    if (!answer) {
+      this.logout();
+      this.router.navigate(['accounts']);
+    }
+
+    return answer;
   }
 
   isLoggedOut() {
