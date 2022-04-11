@@ -48,8 +48,6 @@ class UserResource(Resource):
         j = json.loads(bytes.decode(request.data))
         # This field is expected by the schema.
         # As we're creating, default this to zero
-        # TODO: check if needed
-        # j["id"] = 0
         errors = self.user_schema.validate(j)
 
         if errors:

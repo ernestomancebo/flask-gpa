@@ -1,0 +1,41 @@
+version: '3.9'
+
+services:
+
+  postgres:
+    image: "postgres:14"
+    restart: always
+    container_name: postgres_database
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    volumes:
+      - ./db-data/:/var/lib/postgresql/data/
+
+  web-api:
+    build: ./web-api
+    container_name: web-api
+    restart: always
+    environment:
+      - APP_NAME=web_api
+      - ENV="Production"
+    env_file:
+      - .env
+    ports:
+      - "5008:5008"
+
+  gpa-client:
+    build: ./gpa-client
+    container_name: gpa_client
+    restart: always
+    environment:
+      - APP_NAME=gpa_client
+    ports:
+      - "8080:8080"
+    links:
+      - "postgres"
+      - "web-api"
+    depends_on:
+      - postgres
+      - web-api
