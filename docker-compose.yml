@@ -1,31 +1,36 @@
-version: '3.9'
+version: "3.9"
 
 services:
-
-  postgres:
-    image: "postgres:14"
+  gpa_db:
+    image: "postgres"
     restart: always
-    container_name: postgres_database
+    container_name: gpa_db
     ports:
       - "5432:5432"
+    environment:
+      - DOCKER_DEFAULT_PLATFORM=linux/amd64
     env_file:
       - .env
     volumes:
       - ./db-data/:/var/lib/postgresql/data/
 
-  web-api:
+  web_api:
     build: ./web-api
     container_name: web-api
     restart: always
     environment:
       - APP_NAME=web_api
-      - ENV="Production"
+      - ENV=Production
     env_file:
       - .env
     ports:
       - "5008:5008"
+    links:
+      - gpa_db
+    depends_on:
+      - gpa_db
 
-  gpa-client:
+  gpa_client:
     build: ./gpa-client
     container_name: gpa_client
     restart: always
@@ -34,8 +39,6 @@ services:
     ports:
       - "8080:8080"
     links:
-      - "postgres"
-      - "web-api"
+      - web_api
     depends_on:
-      - postgres
-      - web-api
+      - web_api

@@ -1,4 +1,4 @@
-FROM python:3.7.2-stretch
+FROM python:3.9
 
 WORKDIR /app
 
@@ -13,4 +13,4 @@ CMD [ "./web-api/entrypoint.sh" ]
 
 ENV ENV=Production
 ENV FLASK_ENV=Production
-ENV FLASK_APP=wsgi.pyAAAA
+ENV FLASK_APP=wsgi.py

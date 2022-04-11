@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-cd web-api/app
+cd /app/web-api/app
+
+# Create tables
+flask create-tables
 
 # Apply Migrations
 flask db upgrade
@@ -11,4 +14,4 @@ flask create-users
 
 cd ..
 
-gunicorn --config web-api/app/gunicorn-cfg.py app.wsgi:flask_app
+gunicorn --config app/gunicorn-cfg.py app.wsgi:flask_app

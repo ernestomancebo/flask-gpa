@@ -29,7 +29,7 @@ def create_app():
     app = Flask("api_service")
     # CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-    app.config.from_pyfile("config.py")
+    app.config.from_pyfile(path.join(basedir, "config.py"))
 
     app.logger.info(f"Configuration    = {app.config}")
 

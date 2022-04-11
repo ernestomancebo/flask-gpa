@@ -37,6 +37,15 @@ May be a better place to put this.
 """
 
 
+@flask_app.cli.command("create-tables")
+def create_tables():
+    """Create tables, if don't exist"""
+    from app.extensions import db
+
+    click.echo("creating tables if don't exist")
+    db.create_all()
+
+
 @flask_app.cli.command("create-users")
 def create_users():
     """Create users"""
