@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AccountService } from '../services/account.service';
 
 @Component({
@@ -15,7 +16,8 @@ export class AddAccountComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {}
@@ -27,8 +29,18 @@ export class AddAccountComponent implements OnInit {
     ];
 
     this.accountService.addAccount({ account_number, description }).subscribe({
-      next: (response) => console.log('ok'),
-      error: (err) => console.log('not ok:', err),
+      next: (response) => {
+        if (confirm('Account added.\nAdd a new one?')) {
+          this.accountForm.reset();
+          return;
+        }
+
+        this.router.navigate(['', 'accounts']);
+      },
+      error: (err) => {
+        alert(`There was an error:\n${err.error.message}`);
+        console.error(err);
+      },
     });
   }
 }

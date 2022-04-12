@@ -4,7 +4,6 @@ from app.account.repository.repository import AccountRepository
 from app.auth.token_required import token_required
 from app.extensions import db
 
-# from app.http.response import ResponseFailure, ResponseSuccess, ResponseTypes
 from app.user.repository.user import User
 from flask_restful import Resource, request
 

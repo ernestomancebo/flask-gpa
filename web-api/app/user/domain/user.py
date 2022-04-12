@@ -1,4 +1,3 @@
-# from app.extensions import ma
 from app.user.domain.user_roles import UserRoles
 from marshmallow import Schema, fields
 from marshmallow.decorators import post_load

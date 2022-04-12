@@ -39,7 +39,6 @@ class AuthenticateResource(Resource):
 
         user: User = self.user_repo.get_by_username(auth.username)
         if pwd_context.verify(auth.password, user.password):
-            #
             # TODO: put time delta in configuration
             time_delta = 30
             time_meassure = "minutes"

@@ -60,7 +60,8 @@ export class AddComponent implements OnInit {
         this.userAccounts = res;
       },
       error: (err) => {
-        console.error;
+        alert(`There was an error:\n${err.error.message}`);
+        console.error(err);
       },
     });
   }

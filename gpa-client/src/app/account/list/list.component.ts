@@ -22,6 +22,7 @@ export class ListComponent implements OnInit {
         this.accounts = res;
       },
       error: (err) => {
+        alert(`There was an error:\n${err.error.message}`);
         console.error(err);
       },
     });

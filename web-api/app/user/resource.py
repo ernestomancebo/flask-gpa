@@ -53,7 +53,6 @@ class UserResource(Resource):
         if errors:
             response = ResponseFailure(ResponseTypes.PARAMETERS_ERROR, errors)
             return response.value, 401
-            # abort(401, str(errors))
 
         # Setting this back to None, thus
         # the db engine generates the id

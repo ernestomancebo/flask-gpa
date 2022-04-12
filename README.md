@@ -10,6 +10,12 @@ To serve this app just type at the console:
 docker-compose build
 docker-compose up -d
 ```
+### Credentials
+
+The credentials are the following:
+
+**Username**: admin. **Password**: admin. **Role**: Admin
+**Username**: johndoe. **Password**: john. **Role**: User
 
 ## Architecture
 

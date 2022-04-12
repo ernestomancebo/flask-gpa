@@ -9,9 +9,9 @@ flask create-tables
 flask db upgrade
 
 # Init users
-# python manage.py init
 flask create-users
 
+# Moves a level up, so can recognize wsgi as part of the module
 cd ..
 
 gunicorn --config app/gunicorn-cfg.py app.wsgi:flask_app

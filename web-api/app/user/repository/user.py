@@ -1,4 +1,3 @@
-# Base = declarative_base()
 from app.extensions import db, pwd_context
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base

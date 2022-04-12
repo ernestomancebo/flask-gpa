@@ -2,7 +2,6 @@ from os import environ, path
 
 from dotenv import load_dotenv
 from flask import Flask
-# from flask_cors import CORS
 
 from app.doc.blueprint import SWAGGER_URL
 from app.doc.blueprint import blueprint as swagger_ui_blueprint
@@ -27,7 +26,6 @@ def create_app():
     load_dotenv(path.join(basedir, ".flaskenv"))
 
     app = Flask("api_service")
-    # CORS(app, resources={r"/api/*": {"origins": "*"}})
 
     app.config.from_pyfile(path.join(basedir, "config.py"))
 

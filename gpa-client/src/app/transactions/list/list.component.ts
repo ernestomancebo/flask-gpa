@@ -67,6 +67,7 @@ export class ListComponent implements OnInit {
         this.transactions = res;
       },
       error: (err) => {
+        alert(`There was an error:\n${err.error.message}`);
         console.error(err);
       },
     });
@@ -78,6 +79,7 @@ export class ListComponent implements OnInit {
         this.userAccounts = res;
       },
       error: (err) => {
+        alert(`There was an error:\n${err.error.message}`);
         console.error(err);
       },
     });

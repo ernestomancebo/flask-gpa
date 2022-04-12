@@ -35,9 +35,9 @@ export class LoginScreenComponent implements OnInit {
         this.router.navigate(['accounts']);
       },
       error: (err) => {
+        alert(`There was an error:\n${err.error.message}`);
         console.log(err);
       },
     });
-    console.log(result);
   }
 }
